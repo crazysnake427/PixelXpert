@@ -7,7 +7,8 @@ import static de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField;
 import static de.robv.android.xposed.XposedHelpers.getFloatField;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
-import static sh.siava.pixelxpert.xposed.Constants.AI_METHOD_MLKIT;
+import static de.robv.android.xposed.XposedHelpers.setObjectField;
+import static sh.siava.pixelxpert.xposed.Constants.AI_METHOD_PYTORCH;
 import static sh.siava.pixelxpert.xposed.XPrefs.Xprefs;
 import static sh.siava.pixelxpert.xposed.utils.SystemUtils.idOf;
 import static sh.siava.pixelxpert.xposed.utils.toolkit.ReflectionTools.reAddView;
@@ -58,7 +59,7 @@ public class DepthWallpaper extends XposedModPack {
 	private FrameLayout mWallpaperDimmingOverlay;
 	private boolean mLayersCreated = false;
 
-	private static int SegmentorAI = AI_METHOD_MLKIT;
+	private static int SegmentorAI = AI_METHOD_PYTORCH;
 	public DepthWallpaper(Context context) {
 		super(context);
 	}
@@ -68,7 +69,6 @@ public class DepthWallpaper extends XposedModPack {
 		DWallpaperEnabled = Xprefs.getBoolean("DWallpaperEnabled", false);
 		DWOpacity = Xprefs.getSliderInt("DWOpacity", 192);
 		DWonAOD = Xprefs.getBoolean("DWonAOD", false);
-		SegmentorAI = Integer.parseInt(Xprefs.getString("SegmentorAI", String.valueOf(AI_METHOD_MLKIT)));
 	}
 
 	@Override

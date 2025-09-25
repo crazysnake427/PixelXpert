@@ -5,7 +5,6 @@ package sh.siava.pixelxpert;
 
 interface IRootProviderService {
 	boolean checkLSPosedDB(String packageName);
-	boolean isPackageInstalled(String packageName);
 	boolean activateInLSPosed(String packageName);
 	IBinder getFileSystemService();
 }

@@ -16,7 +16,6 @@ import sh.siava.pixelxpert.BuildConfig;
 import sh.siava.pixelxpert.R;
 import sh.siava.pixelxpert.utils.AppUtils;
 import sh.siava.pixelxpert.utils.ControlledPreferenceFragmentCompat;
-import sh.siava.pixelxpert.utils.MLKitSegmentor;
 import sh.siava.pixelxpert.utils.PyTorchSegmentor;
 
 public class LockScreenFragment extends ControlledPreferenceFragmentCompat {
@@ -78,20 +77,10 @@ public class LockScreenFragment extends ControlledPreferenceFragmentCompat {
 
 	private void updateModelAvailabilitySummary() {
 		try {
-			boolean mlKitModel = Integer.parseInt(mPreferences.getString("SegmentorAI", "0")) == 0;
-
-			if (mlKitModel) {
-				new MLKitSegmentor(getActivity()).checkModelAvailability(moduleAvailabilityResponse ->
-						findPreference("DWallpaperEnabled")
-								.setSummary(moduleAvailabilityResponse.areModulesAvailable()
-										? R.string.depth_wallpaper_model_ready
-										: R.string.depth_wallpaper_model_not_available));
-			} else {
-				findPreference("DWallpaperEnabled")
-						.setSummary(PyTorchSegmentor.loadAssets(getContext())
-								? R.string.depth_wallpaper_model_ready
-								: R.string.depth_wallpaper_model_not_available);
-			}
+			findPreference("DWallpaperEnabled")
+					.setSummary(PyTorchSegmentor.loadAssets(getContext())
+							? R.string.depth_wallpaper_model_ready
+							: R.string.depth_wallpaper_model_not_available);
 		} catch (Exception exception) {
 			Log.e(LockScreenFragment.class.getSimpleName(), exception.getMessage());
 		}

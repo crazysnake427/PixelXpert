@@ -61,17 +61,6 @@ public class RootProvider extends RootService {
 		}
 
 		@Override
-		public boolean isPackageInstalled(String packageName) throws RemoteException {
-			PackageManager pm = getPackageManager();
-			try {
-				pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-				return pm.getApplicationInfo(packageName, 0).enabled;
-			} catch (PackageManager.NameNotFoundException ignored) {
-				return false;
-			}
-		}
-
-		@Override
 		public boolean activateInLSPosed(String packageName) throws RemoteException {
 			if (Constants.SYSTEM_FRAMEWORK_PACKAGE.equals(packageName)) //new LSPosed versions renamed framework
 				packageName = "system";

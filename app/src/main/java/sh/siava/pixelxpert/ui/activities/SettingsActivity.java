@@ -136,14 +136,6 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 					.show();
 		}
 
-		//noinspection ConstantValue
-		if (!isLikelyPixelBuild() && !BuildConfig.VERSION_NAME.contains("canary")) {
-			new MaterialAlertDialogBuilder(this, R.style.MaterialComponents_MaterialAlertDialog)
-					.setTitle(R.string.incompatible_alert_title)
-					.setMessage(R.string.incompatible_alert_body)
-					.setPositiveButton(R.string.incompatible_alert_ok_btn, (dialog, which) -> dialog.dismiss())
-					.show();
-		}
 
 		observeRestartFlag();
 		setupFloatingActionButtons();

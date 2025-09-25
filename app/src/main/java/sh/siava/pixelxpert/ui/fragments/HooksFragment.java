@@ -387,11 +387,7 @@ public class HooksFragment extends BaseFragment {
 	}
 
 	private boolean isAppInstalled(String packageName) {
-		try {
-			return mRootServiceIPC.isPackageInstalled(packageName);
-		} catch (RemoteException e) {
-			return false;
-		}
+		return Shell.cmd("pm path " + packageName).exec().isSuccess();
 	}
 
 	private Drawable getAppIcon(String packageName) {

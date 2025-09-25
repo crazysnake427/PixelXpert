@@ -63,23 +63,6 @@ public class AppUtils {
 		catch (Throwable ignored){}
 	}
 
-	public static boolean isLikelyPixelBuild()
-	{
-		try
-		{
-			Process process = Runtime.getRuntime().exec("getprop ro.build.id");
-			process.waitFor();
-			byte[] buffer = new byte[process.getInputStream().available()];
-			//noinspection ResultOfMethodCallIgnored
-			process.getInputStream().read(buffer);
-			String result = new String(buffer, StandardCharsets.US_ASCII).replace("\n", "");
-			return Pattern.matches("^[TUAB][A-Z]([A-Z0-9]){2}\\.[0-9]{6}\\.[0-9]{3}(\\.[A-Z0-9]{2})?$", result); //Pixel standard build number of A13/14 + new weird build numbers of 'A,B,...' prefix
-		}
-		catch (Throwable ignored)
-		{
-			return false;
-		}
-	}
 
 	public static boolean installDoubleZip(String DoubleZipped) //installs the zip magisk module. even if it's zipped inside another zip
 	{

@@ -59,10 +59,6 @@ public class KeyguardMods extends XposedModPack {
 	private static final Object WALLPAPER_DIM_AMOUNT_DIMMED = 0.6F; //DefaultDeviceEffectsApplier
 	private static WeakReference<KeyguardMods> instance = null;
 
-	private float max_charging_current = 0;
-	private float max_charging_voltage = 0;
-	private float temperature = 0;
-
 	private static boolean ShowChargingInfo = false;
 	//endregion
 
@@ -162,8 +158,6 @@ public class KeyguardMods extends XposedModPack {
 		ReflectedClass DefaultShortcutsSectionClass = ReflectedClass.of("com.android.systemui.keyguard.ui.view.layout.sections.DefaultShortcutsSection");
 		ReflectedClass SmartspaceSectionClass = ReflectedClass.of("com.android.systemui.keyguard.ui.view.layout.sections.SmartspaceSection");
 		ReflectedClass DefaultNotificationStackScrollLayoutSectionClass = ReflectedClass.of("com.android.systemui.keyguard.ui.view.layout.sections.DefaultNotificationStackScrollLayoutSection");
-		ReflectedClass KeyguardIndicationControllerGoogleClass = ReflectedClass.of("com.google.android.systemui.statusbar.KeyguardIndicationControllerGoogle");
-
 		ReflectedClass.of(CameraManager.class)
 				.before("setTorchMode")
 				.run(param -> {
@@ -260,44 +254,6 @@ public class KeyguardMods extends XposedModPack {
 				});
 		//endregion
 
-		//region keyguard battery info
-
-		KeyguardIndicationControllerGoogleClass
-				.afterConstruction()
-				.run(param ->
-						KeyguardIndicationController = param.thisObject);
-
-		KeyguardIndicationControllerGoogleClass
-				.after("computePowerIndication")
-				.run(param -> {
-					if (ShowChargingInfo) {
-						String result = (String) param.getResult();
-
-						Float shownTemperature = (TemperatureUnitF)
-								? (temperature * 1.8f) + 32f
-								: temperature;
-
-						param.setResult(
-								String.format(
-										"%s\n%.1fW (%.1fV, %.1fA) • %.0fº%s"
-										, result
-										, max_charging_current * max_charging_voltage
-										, max_charging_voltage
-										, max_charging_current
-										, shownTemperature
-										, TemperatureUnitF
-												? "F"
-												: "C"));
-					}
-				});
-
-
-		BatteryDataProvider.registerStatusCallback((batteryStatus, batteryStatusIntent) -> {
-			max_charging_current = batteryStatusIntent.getIntExtra(EXTRA_MAX_CHARGING_CURRENT, 0) / 1000000f;
-			max_charging_voltage = batteryStatusIntent.getIntExtra(EXTRA_MAX_CHARGING_VOLTAGE, 0) / 1000000f;
-			temperature = batteryStatusIntent.getIntExtra(EXTRA_TEMPERATURE, 0) / 10f;
-		});
-		//endregion
 
 		//region keyguardDimmer
 		ScrimControllerClass
@@ -402,16 +358,6 @@ public class KeyguardMods extends XposedModPack {
 	}
 
 
-	public static String getPowerIndicationString()
-	{
-		try {
-			return (String) callMethod(instance.get().KeyguardIndicationController, "computePowerIndication");
-		}
-		catch (Throwable ignored)
-		{
-			return ResourceManager.modRes.getString(R.string.power_indication_error);
-		}
-	}
 
 	public static class ControlledLaunchableImageViewBackgroundDrawable extends Drawable
 	{

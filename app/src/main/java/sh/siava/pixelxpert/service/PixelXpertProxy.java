@@ -23,7 +23,6 @@ import sh.siava.pixelxpert.PixelXpert;
 import sh.siava.pixelxpert.R;
 import sh.siava.pixelxpert.xposed.Constants;
 import sh.siava.pixelxpert.utils.PyTorchSegmentor;
-import sh.siava.pixelxpert.utils.MLKitSegmentor;
 
 public class PixelXpertProxy extends Service {
 	@Nullable
@@ -80,12 +79,8 @@ public class PixelXpertProxy extends Service {
 				PixelXpert.get().tryConnectRootService();
 			}
 
-			switch (method)
-			{
-				case AI_METHOD_MLKIT:
-					return MLKitSegmentor.extractSubject(PixelXpert.get(), input);
-				case AI_METHOD_PYTORCH:
-					return PyTorchSegmentor.extractSubject(PixelXpert.get(), input);
+			if (method == AI_METHOD_PYTORCH) {
+				return PyTorchSegmentor.extractSubject(PixelXpert.get(), input);
 			}
 
 			return null;
